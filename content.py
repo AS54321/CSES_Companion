@@ -1,64 +1,75 @@
 import tkinter as tk
-from tkinter import ttk
+from prob_check import prob_check
+from notes_button import notes_feat
 import webbrowser
-import json
 
-class mainContent(ttk.Frame):
+class mainContent(tk.Frame):
     def __init__(self, parent):
-        super().__init__(parent, padding=10, relief="ridge")
-        ttk.Label(self, text="Problems").pack(anchor="w")
+        super().__init__(master=parent, background="#30D5BC")
 
-        self.problem_list = tk.Listbox(self)
-        self.problem_list.pack(fill="both", expand=True)
+        # Configure this frame to expand properly
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        self.mark_button = ttk.Button(self, text="✅ Mark as Solved", command=self.mark_solved)
-        self.mark_button.pack(pady=5)
+        # Create canvas and scrollbar
+        self.canvas = tk.Canvas(self, borderwidth=0, background="#30D5BC")
+        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-        self.problem_list.bind("<Double-Button-1>", self._open_link)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.scrollbar.grid(row=0, column=1, sticky="ns")
 
-        self.links = []
-        self.ids = []  # store IDs for updating progress
-        self.progress = self._load_progress()
+        # Create scrollable frame inside the canvas
+        self.scrollable_frame = tk.Frame(self.canvas, background="#30D5BC", padx=4, pady=4)
+        self.canvas_frame_id = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
 
-    def _load_progress(self):
-        try:
-            with open("progress.json") as f:
-                return json.load(f)
-        except:
-            return {}
+        # Update scrollregion and width binding
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+        self.bind(
+            "<Configure>",
+            lambda e: self.canvas.itemconfig(self.canvas_frame_id, width=e.width - self.scrollbar.winfo_width())
+        )
 
-    def _save_progress(self):
-        with open("progress.json", "w") as f:
-            json.dump(self.progress, f, indent=2)
+        # Cross-platform mousewheel scroll
+        def _on_mouse_scroll(event):
+            if event.num == 4 or event.delta > 0:
+                self.canvas.yview_scroll(-1, "units")
+            elif event.num == 5 or event.delta < 0:
+                self.canvas.yview_scroll(1, "units")
 
-    def display_problems(self, problems):
-        self.problem_list.delete(0, tk.END)
-        self.links = []
-        self.ids = []
+        self.canvas.bind_all("<Button-4>", _on_mouse_scroll)
+        self.canvas.bind_all("<Button-5>", _on_mouse_scroll)
+        self.canvas.bind_all("<MouseWheel>", _on_mouse_scroll)
 
-        for p in problems:
-            label = f"✅ {p['title']}" if p["id"] in self.progress else f"❌ {p['title']}"
-            self.problem_list.insert(tk.END, label)
-            self.links.append(p["url"])
-            self.ids.append(p["id"])
+        self.scrollable_frame.columnconfigure(0, weight=1)
 
-    def mark_solved(self):
-        selection = self.problem_list.curselection()
-        if not selection:
-            return
 
-        idx = selection[0]
-        problem_id = self.ids[idx]
-        self.progress[problem_id] = True
-        self._save_progress()
+class topic_sect(tk.LabelFrame):
 
-        # Refresh current list item text
-        title = self.problem_list.get(idx).lstrip("❌✅ ").strip()
-        self.problem_list.delete(idx)
-        self.problem_list.insert(idx, f"✅ {title}")
-        self.problem_list.selection_set(idx)
+    def __init__(self, title, parent, i):
+        super().__init__(master=parent,text=title, background='#00ff00',bd=8, padx=4, pady=4)
+        self.columnconfigure(0, weight=1)
+        self.title = title
+        self.grid(sticky='ew', padx=3, pady=3, row=i)
+        self.grid_remove()
+        self.prob_list = None
 
-    def _open_link(self, event):
-        index = self.problem_list.curselection()
-        if index:
-            webbrowser.open(self.links[index[0]])
+
+class problem(tk.Frame):
+
+    def __init__(self, parent, title, url, pid, sol):
+        super().__init__(master=parent, padx=2, pady=2,cursor='hand2',bg='#00ff00')
+        name = tk.Label(master=self, text=title, fg='blue')
+        name.grid(row=0, sticky='w')
+        self.columnconfigure(0, weight=1)
+        self.prob_check = prob_check(self, pid, sol,0)
+        notes_feat(self, pid,1)
+        self.grid_configure(sticky='ew')
+        self.bind('<Double-Button-1>',lambda e: webbrowser.open_new(url))
+        self.bind('<Button-1>',lambda e: self.prob_check.invoke())
+        self.bind("<Enter>", lambda e : self.config(bg='lightblue'))
+        self.bind("<Leave>", lambda e : self.config(bg='#00ff00'))
+
