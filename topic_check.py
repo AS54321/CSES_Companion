@@ -9,7 +9,7 @@ class topic_check(tk.Checkbutton):
         self.stat.set(False)
         self.sect = sect
         self.tid = tid
-        super().__init__(parent,variable=self.stat,text=label,command=self.update_output, width=24,anchor='w')
+        super().__init__(parent,variable=self.stat,text=label,command=self.update_output, width=24,anchor='w', bg=config.buttoncolor)
         self.pack(anchor='w',padx=1.5,pady=2.4)
 
 
@@ -20,7 +20,7 @@ class topic_check(tk.Checkbutton):
             if(sect.prob_list==None):
                 probs = fetch_problems(self.tid)
                 sect.prob_list = {}
-                for pid, title, url, tid, sol, notes in probs:
+                for pid, title, url, sol in probs:
                     # print(f"you requested problem {title} to appear")
                     if((not sol) or (not flag)):
                         prob = problem(sect, title, url, pid, sol)

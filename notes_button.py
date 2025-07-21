@@ -12,10 +12,10 @@ class notes_feat(tk.Button):
         note = fetch_notes(pid)
         note_win = tk.Toplevel(self.master)
         note_win.title("Add notes")
-
+        note_win.resizable(False,False)
         notes_text = tk.Text(note_win, wrap="word")
         notes_text.grid(row=0, column=0, sticky="nsew")
-        notes_text.insert(tk.END, note)
+        notes_text.insert("1.0", note)
 
         btn_frame = ttk.Frame(note_win)
         btn_frame.grid(row=1, column=0, columnspan=2, pady=10)
@@ -24,5 +24,6 @@ class notes_feat(tk.Button):
         ttk.Button(btn_frame, text="Clear Text", command=lambda: (notes_text.delete("1.0", tk.END), self.insert(note, pid,''))).grid(row=0, column=2, padx=5)
 
     def insert(self,note, pid,content):
-        if(note==content): return
+        if(note==content or content=='\n'): return
+        # print("something")
         db_update_notes(content,pid)

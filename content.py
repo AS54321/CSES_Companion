@@ -2,17 +2,18 @@ import tkinter as tk
 from prob_check import prob_check
 from notes_button import notes_feat
 import webbrowser
+from config import maincolor, contentcolor, hovercolor
 
 class mainContent(tk.Frame):
     def __init__(self, parent):
-        super().__init__(master=parent, background="#30D5BC")
+        super().__init__(master=parent, background=maincolor)
 
         # Configure this frame to expand properly
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         # Create canvas and scrollbar
-        self.canvas = tk.Canvas(self, borderwidth=0, background="#30D5BC")
+        self.canvas = tk.Canvas(self, borderwidth=0, background=maincolor)
         self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
@@ -20,7 +21,7 @@ class mainContent(tk.Frame):
         self.scrollbar.grid(row=0, column=1, sticky="ns")
 
         # Create scrollable frame inside the canvas
-        self.scrollable_frame = tk.Frame(self.canvas, background="#30D5BC", padx=4, pady=4)
+        self.scrollable_frame = tk.Frame(self.canvas, background=maincolor, padx=8, pady=8)
         self.canvas_frame_id = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
 
         # Update scrollregion and width binding
@@ -49,8 +50,8 @@ class mainContent(tk.Frame):
 
 class topic_sect(tk.LabelFrame):
 
-    def __init__(self, title, parent, i):
-        super().__init__(master=parent,text=title, background='#00ff00',bd=8, padx=4, pady=4)
+    def __init__(self, title, parent, i=0):
+        super().__init__(master=parent,text=title, background=contentcolor,bd=4, padx=5, pady=5, relief="raised")
         self.columnconfigure(0, weight=1)
         self.title = title
         self.grid(sticky='ew', padx=3, pady=3, row=i)
@@ -61,7 +62,7 @@ class topic_sect(tk.LabelFrame):
 class problem(tk.Frame):
 
     def __init__(self, parent, title, url, pid, sol):
-        super().__init__(master=parent, padx=2, pady=2,cursor='hand2',bg='#00ff00')
+        super().__init__(master=parent, padx=2, pady=2,cursor='hand2',bg=contentcolor)
         name = tk.Label(master=self, text=title, fg='blue')
         name.grid(row=0, sticky='w')
         self.columnconfigure(0, weight=1)
@@ -70,6 +71,6 @@ class problem(tk.Frame):
         self.grid_configure(sticky='ew')
         self.bind('<Double-Button-1>',lambda e: webbrowser.open_new(url))
         self.bind('<Button-1>',lambda e: self.prob_check.invoke())
-        self.bind("<Enter>", lambda e : self.config(bg='lightblue'))
-        self.bind("<Leave>", lambda e : self.config(bg='#00ff00'))
+        self.bind("<Enter>", lambda e : self.config(bg=hovercolor))
+        self.bind("<Leave>", lambda e : self.config(bg=contentcolor))
 
