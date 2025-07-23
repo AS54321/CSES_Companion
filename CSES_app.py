@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from side import sidebar
-from top import topbar
-from content import mainContent
+from Regions.side import sidebar
+from Regions.top import topbar
+from Regions.content import mainContent
 from bridge import initialize
 
 class CSES_app(tk.Tk):

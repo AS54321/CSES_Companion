@@ -1,8 +1,8 @@
 import tkinter as tk
-from unsol_only import action as unso_action
-from book_only import action as book_action
-from random_prob import action as rand_action
-from db_queries import close_db
+from TopButton_logic.unsol_only import action as unso_action
+from TopButton_logic.book_only import action as book_action
+from TopButton_logic.random_prob import action as rand_action
+from Data.db_queries import close_db
 from config import topcolor, buttoncolor
 
 class topbar(tk.Frame):

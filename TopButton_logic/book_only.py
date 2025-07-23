@@ -1,6 +1,6 @@
 import tkinter as tk
 import config
-from db_queries import check_notes
+from Data.db_queries import check_notes
 import bridge
 
 sections = bridge.sections

@@ -1,7 +1,9 @@
 import sqlite3
+import os
 
-
-conn = sqlite3.connect('cses.db')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "cses.db")
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 

@@ -1,6 +1,5 @@
 import config
 import bridge
-import tkinter as tk
 
 sections = bridge.sections
 

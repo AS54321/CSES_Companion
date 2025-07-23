@@ -1,4 +1,4 @@
-from db_queries import fetch_notes, db_update_notes
+from Data.db_queries import fetch_notes, db_update_notes
 import tkinter as tk
 from tkinter import ttk
 
@@ -24,6 +24,7 @@ class notes_feat(tk.Button):
         ttk.Button(btn_frame, text="Clear Text", command=lambda: (notes_text.delete("1.0", tk.END), self.insert(note, pid,''))).grid(row=0, column=2, padx=5)
 
     def insert(self,note, pid,content):
-        if(note==content or content=='\n'): return
+        if(note==content): return
+        if(content=='\n'): content = '' 
         # print("something")
         db_update_notes(content,pid)

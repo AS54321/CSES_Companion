@@ -1,6 +1,6 @@
-from content import topic_sect
-from db_queries import fetch_topics
-from topic_check import topic_check
+from Regions.content import topic_sect
+from Data.db_queries import fetch_topics
+from Checkboxes.topic_check import topic_check
 
 sections = {}
 

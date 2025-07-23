@@ -1,6 +1,6 @@
 import tkinter as tk
-from prob_check import prob_check
-from notes_button import notes_feat
+from Checkboxes.prob_check import prob_check
+from Checkboxes.notes_button import notes_feat
 import webbrowser
 from config import maincolor, contentcolor, hovercolor
 
@@ -63,13 +63,13 @@ class problem(tk.Frame):
 
     def __init__(self, parent, title, url, pid, sol):
         super().__init__(master=parent, padx=2, pady=2,cursor='hand2',bg=contentcolor)
-        name = tk.Label(master=self, text=title, fg='blue')
-        name.grid(row=0, sticky='w')
+        self.name = tk.Label(master=self, text=title, fg='blue')
+        self.name.grid(row=0, sticky='w')
         self.columnconfigure(0, weight=1)
-        self.prob_check = prob_check(self, pid, sol,0)
-        notes_feat(self, pid,1)
+        self.prob_check = prob_check(self, pid, sol,1)
+        notes_feat(self, pid,2)
         self.grid_configure(sticky='ew')
-        self.bind('<Double-Button-1>',lambda e: webbrowser.open_new(url))
+        self.bind('<Double-Button-1>',lambda e: (self.prob_check.invoke(), webbrowser.open_new(url)))
         self.bind('<Button-1>',lambda e: self.prob_check.invoke())
         self.bind("<Enter>", lambda e : self.config(bg=hovercolor))
         self.bind("<Leave>", lambda e : self.config(bg=contentcolor))

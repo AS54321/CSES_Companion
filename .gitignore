@@ -1,2 +1,5 @@
 __pycache__/
 *.db
+temp.py
+cses_problems_by_topic.json
+db_from_json.py

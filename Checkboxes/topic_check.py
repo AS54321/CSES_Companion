@@ -1,7 +1,7 @@
 import tkinter as tk
 import config
-from db_queries import fetch_problems
-from content import problem
+from Data.db_queries import fetch_problems
+from Regions.content import problem
 
 class topic_check(tk.Checkbutton):
     def __init__(self, parent, label, sect, tid):
