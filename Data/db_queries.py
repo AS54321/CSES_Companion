@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS problems (
 
 
 def fetch_problems(tid):
-    cursor.execute('SELECT id, title, url, is_solved FROM problems WHERE topic_id=?',(tid,))
+    cursor.execute('SELECT id, title, url, is_solved FROM problems WHERE topic_id=? ORDER BY row_order;',(tid,))
     return cursor.fetchall()
 
 def db_toggle_prob(pid):
